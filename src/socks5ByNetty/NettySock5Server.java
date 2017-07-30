@@ -1,6 +1,5 @@
 package socks5ByNetty;
 
-import orange.netty.NettyOrderServerDemo;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -12,12 +11,19 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.codec.socks.SocksInitRequestDecoder;
+import io.netty.handler.codec.socks.SocksMessageEncoder;
+import io.netty.handler.codec.socksx.v5.Socks5AddressEncoder;
+import io.netty.handler.codec.socksx.v5.Socks5CommandRequestDecoder;
+import io.netty.handler.codec.socksx.v5.Socks5InitialRequestDecoder;
+import io.netty.handler.codec.socksx.v5.Socks5PasswordAuthRequestDecoder;
+import io.netty.handler.codec.socksx.v5.Socks5ServerEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 public class NettySock5Server {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		new NettySock5Server().connect(8888);
 	}
 
@@ -35,12 +41,26 @@ public class NettySock5Server {
 			.childHandler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				protected void initChannel(SocketChannel ch) throws Exception {
-					ch.pipeline()
-					.addLast(new ObjectDecoder(
-						1024*1024,ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())
-					));
-					ch.pipeline().addLast(new ObjectEncoder());
-					ch.pipeline().addLast(new SubReqServerHandler());	
+					System.out.println("INININININININ");
+					//ch.pipeline().addLast(new Socks5ServerEncoder(Socks5AddressEncoder.DEFAULT));
+					ch.pipeline().addLast(Socks5ServerEncoder.DEFAULT);
+					
+					//初始化
+					ch.pipeline().addLast(new Socks5InitialRequestDecoder());
+					//Socks5InitialRequestHandler        自己实现啊
+					ch.pipeline().addLast(new Socks5InitialRequestHandler());
+							
+					//鉴权
+					ch.pipeline().addLast(new Socks5PasswordAuthRequestDecoder());
+					//Socks5PasswordAuthRequestHandler       自己实现鉴权
+					ch.pipeline().addLast(new Socks5PasswordAuthRequestHandler());
+					
+					//返回数据
+					ch.pipeline().addLast(new Socks5CommandRequestDecoder());
+					//实现返回数据自己实现
+					ch.pipeline().addLast(new Socks5CommandRequestHandler());       
+					
+					//ch.pipeline().addLast(new OrangeSocksServerHandler());	
 				}
 			});
 			System.out.println("服务器启动");
