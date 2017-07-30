@@ -10,5 +10,8 @@
 	<classpathentry kind="lib" path="D:/Technolog/myEclipseWorkSpace/SSServer/lib/others/socks5-netty-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="D:/Technolog/myEclipseWorkSpace/SSServer/lib/others/wrapper.jar"/>
 	<classpathentry kind="lib" path="D:/Technolog/myEclipseWorkSpace/SSServer/lib/sqlite-jdbc-3.8.11.2.jar"/>
+	<classpathentry kind="lib" path="D:/Technolog/myEclipseWorkSpace/SSServer/lib/bcprov-jdk15on-1.52.jar"/>
+	<classpathentry kind="lib" path="D:/Technolog/myEclipseWorkSpace/SSServer/lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="D:/Technolog/myEclipseWorkSpace/SSServer/lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

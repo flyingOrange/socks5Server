@@ -13,6 +13,7 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.codec.socks.SocksInitRequestDecoder;
 import io.netty.handler.codec.socks.SocksMessageEncoder;
+import io.netty.handler.codec.socksx.v5.DefaultSocks5PasswordAuthRequest;
 import io.netty.handler.codec.socksx.v5.Socks5AddressEncoder;
 import io.netty.handler.codec.socksx.v5.Socks5CommandRequestDecoder;
 import io.netty.handler.codec.socksx.v5.Socks5InitialRequestDecoder;
@@ -47,17 +48,17 @@ public class NettySock5Server {
 					
 					//初始化
 					ch.pipeline().addLast(new Socks5InitialRequestDecoder());
-					//Socks5InitialRequestHandler        自己实现啊
+					//Socks5InitialRequestHandler    自己实现  有DefaultSocks5InitialRequest、Socks5InitialRequest两种消息
 					ch.pipeline().addLast(new Socks5InitialRequestHandler());
 							
 					//鉴权
-					ch.pipeline().addLast(new Socks5PasswordAuthRequestDecoder());
-					//Socks5PasswordAuthRequestHandler       自己实现鉴权
-					ch.pipeline().addLast(new Socks5PasswordAuthRequestHandler());
+					//ch.pipeline().addLast(new Socks5PasswordAuthRequestDecoder());
+					//Socks5PasswordAuthRequestHandler 自己实现鉴权   DefaultSocks5PasswordAuthRequest、Socks5PasswordAuthRequest
+					//ch.pipeline().addLast(new Socks5PasswordAuthRequestHandler());
 					
 					//返回数据
 					ch.pipeline().addLast(new Socks5CommandRequestDecoder());
-					//实现返回数据自己实现
+					//实现返回数据自己实现                    DefaultSocks5CommandRequest、Socks5CommandRequest
 					ch.pipeline().addLast(new Socks5CommandRequestHandler());       
 					
 					//ch.pipeline().addLast(new OrangeSocksServerHandler());	

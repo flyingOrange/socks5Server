@@ -18,6 +18,7 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.codec.socksx.v5.DefaultSocks5CommandRequest;
 import io.netty.handler.codec.socksx.v5.DefaultSocks5CommandResponse;
 import io.netty.handler.codec.socksx.v5.Socks5AddressType;
+import io.netty.handler.codec.socksx.v5.Socks5CommandRequest;
 import io.netty.handler.codec.socksx.v5.Socks5CommandResponse;
 import io.netty.handler.codec.socksx.v5.Socks5CommandStatus;
 import io.netty.handler.codec.socksx.v5.Socks5CommandType;
@@ -27,6 +28,8 @@ public class Socks5CommandRequestHandler  extends SimpleChannelInboundHandler<De
 	@Override
 	protected void channelRead0(final ChannelHandlerContext clientChannelContext,
 			DefaultSocks5CommandRequest msg) throws Exception {
+		// DefaultSocks5CommandRequest、Socks5CommandRequest
+		System.out.println("DefaultSocks5CommandRequest、Socks5CommandRequest");
 		System.out.println("目标服务器  : " + msg.type() + "," + msg.dstAddr() + "," + msg.dstPort());
 		String host = msg.dstAddr();
 		int port = msg.dstPort();
