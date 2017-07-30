@@ -28,7 +28,7 @@ public class Socks5InitialRequestHandler extends SimpleChannelInboundHandler<Def
 //					ctx.writeAndFlush(initialResponse);
 //				}
 //			}
-				System.out.println("返回一下");
+				//System.out.println("返回一下");
 				//Socks5InitialResponse initialResponse = new DefaultSocks5InitialResponse(Socks5AuthMethod.NO_AUTH);
 				Socks5InitialResponse initialResponse = new DefaultSocks5InitialResponse(Socks5AuthMethod.PASSWORD);
 				ctx.writeAndFlush(initialResponse);
