@@ -21,6 +21,7 @@ import io.netty.handler.codec.socksx.v5.Socks5PasswordAuthRequestDecoder;
 import io.netty.handler.codec.socksx.v5.Socks5ServerEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 
 public class NettySock5Server {
 	
@@ -32,7 +33,7 @@ public class NettySock5Server {
 	{
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
-		
+		 
 		try{
 			ServerBootstrap b = new ServerBootstrap();
 			b.group(bossGroup,workerGroup)
@@ -43,6 +44,8 @@ public class NettySock5Server {
 				@Override
 				protected void initChannel(SocketChannel ch) throws Exception {
 					System.out.println("INININININININ");
+					//超时断开
+					ch.pipeline().addLast(new ReadTimeoutHandler(3));
 					//ch.pipeline().addLast(new Socks5ServerEncoder(Socks5AddressEncoder.DEFAULT));
 					ch.pipeline().addLast(Socks5ServerEncoder.DEFAULT);
 					
@@ -50,7 +53,8 @@ public class NettySock5Server {
 					ch.pipeline().addLast(new Socks5InitialRequestDecoder());
 					//Socks5InitialRequestHandler    自己实现  有DefaultSocks5InitialRequest、Socks5InitialRequest两种消息
 					ch.pipeline().addLast(new Socks5InitialRequestHandler());
-							
+					
+					
 					//鉴权
 					//ch.pipeline().addLast(new Socks5PasswordAuthRequestDecoder());
 					//Socks5PasswordAuthRequestHandler 自己实现鉴权   DefaultSocks5PasswordAuthRequest、Socks5PasswordAuthRequest
@@ -61,7 +65,6 @@ public class NettySock5Server {
 					//实现返回数据自己实现                    DefaultSocks5CommandRequest、Socks5CommandRequest
 					ch.pipeline().addLast(new Socks5CommandRequestHandler());       
 					
-					//ch.pipeline().addLast(new OrangeSocksServerHandler());	
 				}
 			});
 			System.out.println("服务器启动");

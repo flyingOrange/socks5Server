@@ -25,6 +25,10 @@ import io.netty.handler.codec.socksx.v5.Socks5CommandType;
 
 public class Socks5CommandRequestHandler  extends SimpleChannelInboundHandler<DefaultSocks5CommandRequest>{
 
+	public Socks5CommandRequestHandler()
+	{
+		System.out.println("创建   转发Handler");
+	}
 	@Override
 	protected void channelRead0(final ChannelHandlerContext clientChannelContext,
 			DefaultSocks5CommandRequest msg) throws Exception {
@@ -62,7 +66,7 @@ public class Socks5CommandRequestHandler  extends SimpleChannelInboundHandler<De
 
 				public void operationComplete(final ChannelFuture future) throws Exception {
 					if(future.isSuccess()) {
-						System.out.println("成功连接目标服务器");
+						//System.out.println("成功连接目标服务器");
 						clientChannelContext.pipeline().addLast(new Client2DestHandler(future));
 						Socks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.SUCCESS, Socks5AddressType.IPv4);
 						clientChannelContext.writeAndFlush(commandResponse);
@@ -99,7 +103,7 @@ public class Socks5CommandRequestHandler  extends SimpleChannelInboundHandler<De
 		}
 		@Override
 		public void channelInactive(ChannelHandlerContext ctx2) throws Exception {
-			System.out.println("目标服务器断开连接");
+			//System.out.println("目标服务器断开连接");
 			clientChannelContext.channel().close();
 		}
 
@@ -121,13 +125,13 @@ public class Socks5CommandRequestHandler  extends SimpleChannelInboundHandler<De
 		}
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-			System.out.println("将客户端的消息转发给目标服务器端");
+			//System.out.println("将客户端的消息转发给目标服务器端");
 			destChannelFuture.channel().writeAndFlush(msg);
 		}
 		
 		@Override
 		public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-			System.out.println("客户端断开连接");
+			//System.out.println("客户端断开连接");
 			destChannelFuture.channel().close();
 		}
 		

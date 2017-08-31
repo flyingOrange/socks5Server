@@ -19,6 +19,10 @@ import io.netty.handler.codec.socksx.v5.Socks5InitialResponse;
 
 public class Socks5InitialRequestHandler extends SimpleChannelInboundHandler<Socks5InitialRequest>{
 
+	public Socks5InitialRequestHandler()
+	{
+		System.out.println("创建请求Socks5InitialRequestHandler");
+	}
 	
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx,
@@ -37,7 +41,7 @@ public class Socks5InitialRequestHandler extends SimpleChannelInboundHandler<Soc
 			}else
 			{
 				System.out.println("不    是ss5协议!");
-				ctx.close();
+				ctx.channel().close();
 			}
 			
 					
