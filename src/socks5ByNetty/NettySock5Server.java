@@ -26,7 +26,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 public class NettySock5Server {
 	
 	public static void main(String[] args) throws InterruptedException {
-		new NettySock5Server().connect(8888);
+		new NettySock5Server().connect(9999);
 	}
 
 	public void connect(int port) throws InterruptedException
