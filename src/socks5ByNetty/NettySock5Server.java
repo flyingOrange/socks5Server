@@ -45,14 +45,14 @@ public class NettySock5Server {
 				protected void initChannel(SocketChannel ch) throws Exception {
 					System.out.println("INININININININ");
 					//超时断开
-					ch.pipeline().addLast(new ReadTimeoutHandler(3));
+					//ch.pipeline().addLast(new ReadTimeoutHandler(3));
 					//ch.pipeline().addLast(new Socks5ServerEncoder(Socks5AddressEncoder.DEFAULT));
-					ch.pipeline().addLast(Socks5ServerEncoder.DEFAULT);
+					//ch.pipeline().addLast(Socks5ServerEncoder.DEFAULT);
 					
 					//初始化
-					ch.pipeline().addLast(new Socks5InitialRequestDecoder());
+					//ch.pipeline().addLast(new Socks5InitialRequestDecoder());
 					//Socks5InitialRequestHandler    自己实现  有DefaultSocks5InitialRequest、Socks5InitialRequest两种消息
-					ch.pipeline().addLast(new Socks5InitialRequestHandler());
+					//ch.pipeline().addLast(new Socks5InitialRequestHandler());
 					
 					
 					//鉴权
@@ -61,9 +61,9 @@ public class NettySock5Server {
 					//ch.pipeline().addLast(new Socks5PasswordAuthRequestHandler());
 					
 					//返回数据
-					ch.pipeline().addLast(new Socks5CommandRequestDecoder());
+					//ch.pipeline().addLast(new Socks5CommandRequestDecoder());
 					//实现返回数据自己实现                    DefaultSocks5CommandRequest、Socks5CommandRequest
-					ch.pipeline().addLast(new Socks5CommandRequestHandler());       
+					//ch.pipeline().addLast(new Socks5CommandRequestHandler());       
 					
 				}
 			});
