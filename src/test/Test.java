@@ -1,7 +1,25 @@
 package test;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.Security;
 import java.util.ArrayList;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.netty.encryption.impl.AesCrypt;
+
+import com.xiaoleilu.hutool.crypto.Mode;
+import com.xiaoleilu.hutool.crypto.Padding;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.crypto.symmetric.AES;
 import com.xiaoleilu.hutool.crypto.symmetric.DES;
@@ -18,43 +36,17 @@ public class Test {
 //		ByteBuf buf =Unpooled.buffer(1024);  
 //		buf.writeInt(a);
 //		buf.writeLong(b);
-//		
 //		int c = buf.readInt();
 //		System.out.println(c);
 //		System.out.println(buf.writerIndex());
-//		String content = "test中文";
-//		//随机生成密钥
-//		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
-//		//构建
-//		AES aes = SecureUtil.aes(key);
-//		//加密
-//		byte[] encrypt = aes.encrypt(content);
-//		//解密
-//		byte[] decrypt = aes.decrypt(encrypt);
-//
-//
-//		
-//		byte[] key2 = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
-//		DES des = SecureUtil.des(key2);
-//		//加密为16进制表示
-//		String encryptHex = des.encryptHex(content);
-//		//解密为原字符串
-//		String decryptStr = des.decryptStr(encryptHex);
-//		System.out.println(decryptStr);
 		
-		System.out.println("start");
-		ArrayList<Object> al = new ArrayList<Object>();
-		while(true)
-		{
-			//al.add(new Object());
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		String str="017B7D5106003500202389010000010000000000000377777706676F6F676C6503636F6D0000010001";
+		System.out.println(new String(Encrypt.parseHexStr2Byte(str)));
 
 	}
+	  
+	
+	  
 
 }
 

@@ -1,5 +1,4 @@
-package socks5ByNetty;
-
+package nettyTraffic;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -23,10 +22,10 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 
-public class NettySock5Server {
+public class NettyMain {
 	
 	public static void main(String[] args) throws InterruptedException {
-		new NettySock5Server().connect(9999);
+		new NettyMain().connect(9999);
 	}
 
 	public void connect(int port) throws InterruptedException
@@ -43,7 +42,10 @@ public class NettySock5Server {
 			.childHandler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				protected void initChannel(SocketChannel ch) throws Exception {
-					ch.pipeline().addLast(new ServerHandler());
+					
+					//ch.pipeline().addLast(new ServerHandler());
+					
+					
 				}
 			});
 			System.out.println("服务器启动");
@@ -60,3 +62,4 @@ public class NettySock5Server {
 	
 
 }
+
