@@ -35,10 +35,10 @@ public class Socks5InitialRequestHandler extends SimpleChannelInboundHandler<Soc
 
 			if(request.version().equals(SocksVersion.SOCKS5))
 			{
-				
+				//根据socks5协议可知，method保存的是客户端支持的方法列表
 				List<Socks5AuthMethod> method = request.authMethods();
 				System.out.println("是socks5协议！   "+method.size()+"    "+method.get(0).toString());
-				
+				//这里我们使用是无鉴权的
 				Socks5InitialResponse initialResponse = new DefaultSocks5InitialResponse(Socks5AuthMethod.NO_AUTH);
 				ctx.writeAndFlush(initialResponse);
 				
