@@ -1,4 +1,4 @@
-package socks5ByNetty;
+package socks5ServerByNetty;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

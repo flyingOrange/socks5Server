@@ -1,6 +1,7 @@
-package socks5ByNetty;
+package socks5ServerByNetty;
 
 import java.net.InetAddress;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.logging.Log;
@@ -33,21 +34,22 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
 	private ICrypt _crypt;
 	private AtomicReference<Channel> remoteChannel = new AtomicReference<>();
 	private ByteBuf clientCache;
+	//流量记录
+	private AtomicInteger byteFlow = null;
 
 	public ClientProxyHandler(String host, int port, ChannelHandlerContext clientProxyChannel, ByteBuf clientCache,
-			ICrypt _crypt) {
+			ICrypt _crypt,AtomicInteger byteFlow) {
 		this._crypt = _crypt;
 		this.clientCache = clientCache;
+		this.byteFlow = byteFlow;
 		init(host, port, clientProxyChannel, _crypt);
 	}
 
 	/**
 	 * 通过host和port与互联网进行连接
-	 * 
 	 * @param host
 	 * @param port
-	 * @param clientProxyChannel
-	 *            和代理服务器建立的连接
+	 * @param clientProxyChannel和代理服务器建立的连接
 	 * @param _crypt
 	 */
 	private void init(final String host, final int port, final ChannelHandlerContext clientProxyChannel,
@@ -67,16 +69,16 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
 				@Override
 				public void operationComplete(ChannelFuture future) throws Exception {
 					if (future.isSuccess()) {
-						logger.info("connect success host = " + host + ",port = " + port);
+						//logger.info("connect success host = " + host + ",port = " + port);
 						remoteChannel.set(future.channel());
 					} else {
-						logger.info("connect fail host = " + host + ",port = " + port);
+						//logger.info("connect fail host = " + host + ",port = " + port);
 						clientProxyChannel.close();
 					}
 				}
 			});
 		} catch (Exception e) {
-			logger.error("connect intenet error", e);
+			//logger.error("connect intenet error", e);
 			clientProxyChannel.close();
 		}
 	}
@@ -110,6 +112,6 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
 			remoteChannel.get().close();
 		}
 		
-		logger.error("ClientProxyHandler error", cause);
+		//logger.error("ClientProxyHandler error", cause);
 	}
 }

@@ -1,4 +1,4 @@
-package socks5ByNetty;
+package socks5ServerByNetty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -43,10 +43,11 @@ public class NettySock5Server {
 			.childHandler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				protected void initChannel(SocketChannel ch) throws Exception {
+					System.out.println("client "+ch.remoteAddress()+" connect");
 					ch.pipeline().addLast(new ServerHandler());
 				}
 			});
-			System.out.println("服务器启动");
+			System.out.println("server start at port "+port);
 			//绑定端口,同步等待成功
 			ChannelFuture f = b.bind(port).sync();
 			//等待服务器监听端口关闭

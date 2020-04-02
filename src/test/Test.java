@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -40,9 +41,11 @@ public class Test {
 //		System.out.println(c);
 //		System.out.println(buf.writerIndex());
 		
-		String str="017B7D5106003500202389010000010000000000000377777706676F6F676C6503636F6D0000010001";
-		System.out.println(new String(Encrypt.parseHexStr2Byte(str)));
+//		String str="017B7D5106003500202389010000010000000000000377777706676F6F676C6503636F6D0000010001";
+//		System.out.println(new String(Encrypt.parseHexStr2Byte(str)));
+		
 
+		
 	}
 	  
 	

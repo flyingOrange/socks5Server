@@ -1,4 +1,4 @@
-package socks5ByNetty;
+package socks5ServerByNetty;
 
 import java.io.ByteArrayOutputStream;
 
@@ -9,6 +9,8 @@ import java.net.InetAddress;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -20,25 +22,38 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 import test.Encrypt;
 
 //测试密码是 12345
 public class ServerHandler extends ChannelInboundHandlerAdapter {
+	//加密
 	private ICrypt crypt;
+	//流量记录
+	private AtomicInteger byteFlow;
 	public ServerHandler()
 	{
 		this.crypt = CryptFactory.get("aes-256-cfb", "12345");
+		this.byteFlow = new AtomicInteger();
+		System.out.println("ServerHandler constructor");
 	}
 	
-	
+	@Override
+	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+		System.out.println("ServerHandler channelReadComplete");
+	}
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		cause.printStackTrace();
 		ctx.close();
-		//logger.error("HostHandler error", cause);
+		//把使用流量字节数保存到数据库 （最好清零）
+		System.out.println("ServerHandler save byteFlow = " + byteFlow.get());
+		
 	}
 
 	@Override
@@ -49,15 +64,17 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		ByteBuf buff = (ByteBuf)msg;
 		int len = buff.readableBytes();
 		byte []arr = new byte[len];
-		System.out.println("receive data length:"+len);
+		//System.out.println("receive data length:"+len);
 		buff.getBytes(0, arr);
+		//记录流量
+		byteFlow.addAndGet(len);
 		//解密
 		ByteArrayOutputStream localOutStream = new ByteArrayOutputStream();
 		crypt.decrypt(arr, arr.length, localOutStream);
 		//解密后的byte数组
 		byte []data = localOutStream.toByteArray();
-		System.out.println(Encrypt.parseByte2HexStr(data));
-		System.out.println(new String(data));
+		//System.out.println(Encrypt.parseByte2HexStr(data));
+		//System.out.println(new String(data));
 		//封装成ByteBuf以方便操作字节
 		ByteBuf dataBuff = Unpooled.buffer();
 		dataBuff.writeBytes(data);
@@ -94,11 +111,12 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		{
 			throw new IllegalStateException("unknown address type: " + ATYP);
 		}
-		System.out.println("host = " + host + ",port = " + port + ",dataBuff = " + dataBuff.readableBytes());
-		ctx.channel().pipeline().addLast(new ClientProxyHandler(host, port, ctx, dataBuff, crypt));
+		//System.out.println("host = " + host + ",port = " + port + ",dataBuff = " + dataBuff.readableBytes());
+		ctx.channel().pipeline().addLast(new ClientProxyHandler(host, port, ctx, dataBuff, crypt,byteFlow));
 		ctx.channel().pipeline().remove(this);
 		
-		
+		//丢弃已接收的消息
+		//ReferenceCountUtil.release(msg);
 		
 	}
 	
